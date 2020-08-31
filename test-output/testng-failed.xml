@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [Suite1]">
+  <test thread-count="5" name="TestngAnnotation-test1(failed)">
+    <parameter name="myName" value="manisha"/>
+    <groups>
+      <run>
+        <include name="group"/>
+        <include name="group1"/>
+      </run>
+    </groups>
+    <classes>
+      <class name="com.TestNG.TestngAnnotation">
+        <methods>
+          <include name="testCase4"/>
+          <include name="testCase2"/>
+          <include name="testCase5"/>
+        </methods>
+      </class> <!-- com.TestNG.TestngAnnotation -->
+    </classes>
+  </test> <!-- TestngAnnotation-test1(failed) -->
+</suite> <!-- Failed suite [Suite1] -->

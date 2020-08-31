@@ -1,0 +1,11 @@
+1. reverse string 
+take string 
+find length s.length
+take string balnk veriable 
+use loop and reverse the string --- s.charAt
+
+//		String s = "Selenium";
+//		StringBuffer sf = new StringBuffer(s);
+//		System.out.println(sf.reverse());
+
+2. reverse string 

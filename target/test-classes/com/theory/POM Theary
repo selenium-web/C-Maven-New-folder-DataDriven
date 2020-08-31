@@ -1,0 +1,560 @@
+POM :
+30 TO 38
+43,62,63,69,80,89,
+2 -- FROM PC REGARDING JENKINS 
+1 -- EXPLAIN POM in interview 
+52,24,25
+ -- FROM LOGS 
+ 
+ ctrl+shift+o  -- to import all liabraby
+ F2 --- TO COPY THE CLASS NAME
+ 
+TestNG.xml file > CLICK ON line > right click > source > add block comments. --- it will comments the line .
+ 
+ 
+ Technology used in POM 
+ JAVA
+ Selenium WebDriver 
+ TestNG  --- To design a test cases in a systematic way 
+ Maven  ---- To create builds
+ APACHE POI API --- To read data from excel 
+ Extent Reports / TestNG Reports 
+ Log4j API--- To generate logs 
+ Jenkins CI --- to create continious integration
+ GIT Reposatory > to maintain the code 
+ selenium GRID --- for Paraller testing 
+ browser 
+ VM 
+ OS
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ // com.qa.base  packages
+ 
+  1. Test base class > pareny of all other classes. all other classes are extending the parent class.
+ 1. Test_base .java >  parent class of all classes. 
+ a. initialization of web drivers like chrome driver.  b. property files, properties are also available. 
+ c. window().maximize()  method  d. timeouts().implicitlyWait(10, TimeUnit.SECONDS);  method 
+ e. deleteAllCookies()  f. driver.get URL. G. PageLoadTimeout()  method.
+ 
+ driver mentioned in TestBase class in used by all test java classes means we are use inheritance concept, parent child relationship. 
+ 
+  // com.qa.pages  packages
+  2. page library > collection of saperate java class for each web-page according to the project.
+ each page - java class contains > a. webElements available on that page.  b. action / methods or functionality available on that page. 
+ OR - Object reposatory > collection of all web object or web elements. 
+ 
+ // com.qa.tests  packages
+ 3. Test layer > have seperate Test java class for respective page class available in page library. 
+ a. we wiil use TestNG annotataion in Test layer. 
+ 
+  // com.qa.config  packages
+4. config.properties file > to define environment veriables like a. URL, Username, password, browser an others 
+
+ // com.qa.testData  packages
+5. Test data excel > to maintain the test data. we can read excel using apache POI API. 
+
+ // com.qa.utils  packages
+6. Utilities java file.: TestUtil.java > to store some a. commonUtilis  b. screenshot method  c. send email method. d. Generic functions
+
+ // output folder
+7. Test Reports > to store reports > a. HTML Report  b. XML report  c. TestNG reports d extentReports
+
+LoginPage > HomePage   : Home Page is landing page of Login Page
+
+
+classes :
+	// FileInputStream  > import java.io.FileInputStream;
+	// FileNotFoundException > import java.io.FileNotFoundException;
+	// IOException > import java.io.IOException;
+
+	public static WebDriver driver;  // import org.openqa.selenium.WebDriver;
+	public static Properties prop;   // import java.util.Properties;
+	public  static EventFiringWebDriver e_driver; // import org.openqa.selenium.support.events.EventFiringWebDriver;
+
+
+
+steps :
+ 1. add dependencies pom.xml
+ 2. create all packages as per above 7 layers
+ 3. create config.properties under config package.
+ 4. create all pages java class under pages package
+ 5. create TestBase java class under base package
+ 6. write code in TestBase java class.  a. create test base constructor b. to load the config file 
+ c. public static void initialisation method() to read/get properties from config properties  
+ d. read browser property and load the browser and get the URL. 
+ 7. Create TestUtil java class in Util package. mentioned the page load time and implicit wait veriable 
+ and set the value there and read this value in TestBase class. 
+ 8. extends TestBase java class in all child java classes in pages packages.
+ 9. in Login Page Java class > define page Factory i.e object reposatory. 
+ 10. Note down all the webelements available on login page which is required for the login page functionality
+  and other functionality available on login page.
+  11. create LoginPage constructor and Initialised the page factory elements / OR / page objects  with the webDriver 
+  by using 'PageFactory.initElement()' method.
+  within a current class i.e Login Page constructor.
+  12. write down the methods for actions / functionality available on login page.
+  13. return the object of landing page java class.
+  14. move towards Testcases package > create LoginPageTest java class and extends the TestBase java class.
+  15. Create the LoginPageTest class constructor and call the parent class i.e TestBase class constructor using super().
+  to initialised the properties and we will load the config.properties files.
+  
+  16. create method with @BeforeMethod TestNG annotation and call the initialisation() method. 
+  and create the LoginPage class object and pass the driver. 
+  17. create the AfterMethod and write down code to quit the driver. driver.quit
+18. create the test cases / test methods and call the respective methods from LoginPage class.
+pass the parameters to login test case by getting it from config.properties file. use properties variable.getproperty.
+19. use the assertions in every test case to validate the test output. to decide wether test case is pass or fail. 
+Assert.assertTrue  or Assert.assertequals 
+20. read data from excel sheet 
+21. how will you increase your script performance ? 
+by using @CacheLookUp > it will available in PageFactory API. It will create the small cache memory and and all web elements are 
+stored there so that whenever we run the 
+script selenium will not search the xpath in HTML DOM of browser and it will pickup it from cache memory. 
+but while working with it if page gets refreshed then we may get StaleElementException as selenium internal id for that element is changed
+and hence selenium will not able do actions using this element. 
+
+22. WEB DRIVER FIRE EVENT -- WEB DRIVER LISTNER --- TO GENERATE SELENIUM AACTIONS LOGS / TestNG Listeners
+Add 'WebEventListener.java' class into com.crm.qa.util package.
+
+add below lines of code into 'TestBase.java' class into com.crm.qa.base package.
+
+	public  static EventFiringWebDriver e_driver; // import org.openqa.selenium.support.events.EventFiringWebDriver;
+	public static WebEventListener eventListener; // import com.crm.qa.util.WebEventListener;
+e_driver = new EventFiringWebDriver(driver);
+//		 Now create object of EventListerHandler to register it with EventFiringWebDriver
+		eventListener = new WebEventListener();
+		e_driver.register(eventListener);
+		driver = e_driver;
+
+run the program and check logs into consol.
+we can add or change the logs into 'WebEventListener.java' class.
+
+22.1 if any exception occoure and if we want to throu some error we have also method and code for that in 'WebEventListener.java' class.
+22.2 if any test case fail, we can capture the screenshot of that page also by using 'WebEventListener.java' class.
+for that in 'WebEventListener.java' class we have to call takeScreenshotAtEndOfTest() method. we have to write code for this method 
+into 'TestUtil.java' class into com.crm.qa.util package.
+advantage : we have to call takeScreenshotAtEndOfTest() method only once into the project. 
+in 'takeScreenshotAtEndOfTest() method' we can mentioned the path where we want screenshots to be stored. 
+
+
+
+23. TAKE SCREEN SHOT IN CASE OF TEST FAILURE. 
+24. EXCEL READER >
+Add below code into 'TestUtil.java' class into com.crm.qa.util package.
+
+public static String TESTDATA_SHEET_PATH = "C:\\Maven\\Automation_Learning\\src\\main\\java\\com\\crm\\qa\\testdata\\FreeCrmTestData.xlsx";
+
+	static Workbook book;
+	static Sheet sheet;
+
+public static Object[][] getTestData(String sheetName) throws InvalidFormatException {
+		FileInputStream file = null;
+		try {
+			file = new FileInputStream(TESTDATA_SHEET_PATH);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			book = WorkbookFactory.create(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		sheet = book.getSheet(sheetName);
+		Object[][] data = new Object[sheet.getLastRowNum()][sheet.getRow(0).getLastCellNum()];
+		// System.out.println(sheet.getLastRowNum() + "--------" +
+		// sheet.getRow(0).getLastCellNum());
+		for (int i = 0; i < sheet.getLastRowNum(); i++) {
+			for (int k = 0; k < sheet.getRow(0).getLastCellNum(); k++) {
+				data[i][k] = sheet.getRow(i + 1).getCell(k).toString();
+				// System.out.println(data[i][k]);
+			}
+		}
+		return data;
+	}
+
+add sheet name into the test class file from which sheet we want to read data. >
+String sheetName = "contacts";
+
+write the dataProvider method >
+	@DataProvider
+	public Object[][] getCRMTestData() throws InvalidFormatException{
+		Object data[][] = TestUtil.getTestData(sheetName);
+		return data;
+	}
+	
+write the test case and use above dataprovider 
+	@Test(priority=3, dataProvider="getCRMTestData")
+	public void createNewContact(String firstname, String lastname, String middlename)
+	{
+	contactsPage.clickOnNewContact();
+	contactsPage.createNewContact(firstname, lastname, middlename);
+	}
+	
+run the test case. 
+
+25. LOG4J:
+	//What is log? : capturing info/activities at the time of program execution. 
+	// types of logs:
+		//1. info
+		//2. warn
+		//3. debug
+		//4. fatal
+		
+	//how to generate the logs? : use Apache log4j API (log4j jar)
+	//How it works? : it reads log 4j configuration from log4j.properties file
+	//where to create: create inside resources folder
+
+add log4j maven dependency in pom.xml
+create log4j.properties file into src/main/resources and mentioned below configuration 
+add static Logger log = Logger.getLogger(TestBase.class);  code into the java class where you want to generate user defined logs.
+put the  logs into java class like log.info("****************************** Starting test cases execution  *****************************************");
+	log.info("entering application URL");
+		log.warn("Hey this just a warning message");
+		log.fatal("hey this is just fatal error message");
+		log.debug("this is debug message");
+		
+		
+
+Console appender > which writes the logs on to the consol 
+file appender > which writes the logs into the file
+log file name > application.logs   
+max file size > max filesize of logs file.
+max backup index > how many backup files you want to create 
+pattern lay out > in which date pattern you want to generate logs 
+append=true. > every time appen the logs into file without clearing the existing logs. 
+logs are getting generated into 'application.logs' file outside all folders. we need to refresh the project to get latest logs.
+
+
+ 
+26.
+Extent report > 
+add extent report maven dependency in pom.xml 
+create package in src/main/java > com.qa.ExtentReportListener
+create the java class 'ExtentReporterNG.java' which has code for extent report listners. we can mentioned the report name here. 
+put below lines into teng.xml file >
+	<listeners>
+		<listener class-name="com.qa.ExtentReportListener.ExtentReporterNG" />
+    	</listeners> 
+run the test case 
+refresh the project after test case run completed 
+open test-output folder and open extent.html report in browser. 
+
+27. listener ?
+As the name suggests Listeners "listen" to the event defined in the selenium script and behave accordingly. 
+It is used in selenium by implementing Listeners Interface. It allows customizing TestNG reports or logs.
+ There are many types of TestNG listeners available.
+ Above we use IReporter TestNG listeners in 'WebEventListener.java' class into com.crm.qa.util package.
+ 
+ to add another TestNG listener we have done below>
+ create 'TestngListener_ITestListener.java' class into com.crm.qa.util package and implemets ITestListener.
+ add below code into testng.xml to listen the events mentioned in 'TestngListener_ITestListener.java' class.
+    	
+    	 	<listeners>
+		<listener class-name="com.crm.qa.util.TestngListener_ITestListener" />
+    	</listeners> 
+ 
+ run the test case and see the logs into consol. 
+ 
+ 28. Add failed test case screenshot into extent reports. 
+ 
+ 29. GIT > PUSH CODE TO GIT 
+ create a new repository on the command line
+ 
+ echo "# POM" >> README.md
+ C:\Maven\Automation_Learning>
+git init
+git remote add origin https://github.com/selenium-web/POM.git
+git status 
+git add .
+git status
+git commit -m "first commit"
+C:\Maven\Automation_Learning> git config --global user.email "abhiingole5@gmail.com"
+
+C:\Maven\Automation_Learning>git config --global user.name "selenium-web"
+git push origin master
+git push -f origin master
+
+                
+…or push an existing repository from the command line
+git remote add origin https://github.com/selenium-web/POM.git
+git push -u origin master
+ 
+ 
+ 30. add screenshot in extent report.
+ 31. use jenkings to run build after code commit in GIT.
+ 32. use jenkins to create extent reports.  
+ 33. use log4j in selenium.
+ 33. use testNG logs.
+ 34. use retry logic for fail test cases.
+ use in xpath not found, browser gets crashed, elemnet not found ,application gets crashed,
+  timeout issue, page load time out, dropdown not loaded, ajax components or images not comming on page properly, 
+ 35.  soft assertion in TestNG > https://www.youtube.com/watch?v=IQiZgpXRZIQ
+ 36. https://www.youtube.com/watch?v=IAo-nia3YlM > Real Time Use Case of HashMap in Selenium || Important Selenium Interview Question
+ 37. Abstract Class in Java and Usage in Selenium > https://www.youtube.com/watch?v=GYllkxPwmz8
+ 39. Conditional Statement in Java and Usage in Selenium Webdriver > https://www.youtube.com/watch?v=1kmnPHzmXAw
+ 41. Polymorphism in Java for Selenium WebDriver and Usage of the same > https://www.youtube.com/watch?v=ci6902thsQk
+ 43. Collections in Selenium Webdriver > https://www.youtube.com/watch?v=2OQkAKscumk
+ 44. How to use HashMap in Selenium > https://www.youtube.com/watch?v=x7AIIVFgQVw
+ 45. How Object Oriented Principles(OOP) are implemented in Test Automation Framework > https://www.youtube.com/watch?v=EETZqPuO2vo
+ 46. Selenium- Java Interview Question: OOPS - Encapsulation > https://www.youtube.com/watch?v=vs-dAp1ZFZg
+ 47. java programs > https://www.youtube.com/watch?v=exzJoArl0h0&list=PLFGoYjJG_fqr84PKCp88iPkQDWJSfzaqz
+ 48. Different Data Types In Java - Core Java - Part -1 > https://www.youtube.com/watch?v=Wm0KeM90bUo&list=PLFGoYjJG_fqqyIj2ht0aHMx_HnGX3ZFEx
+ 49. collection 
+ 50. string class
+ 51. java programs > https://www.youtube.com/watch?v=KIQ6fZ4XRKs&list=RDCMUCTn0UsklYqRWTDyxk2Op1fQ&start_radio=1&t=0
+ 
+ 
+ Selenium & Java Full Paid Course Recorded Videos
+Click here to BUY:
+
+Discounted Price: 11999 INR (165 USD)
+
+Actual Price: 16500 INR
+
+Course Content:
+
+Selenium WebDriver is a leading web automation testing tool in industry. It is one of the most popular tool. Selenium WebDriver jobs are on a rise and are highly paid and highly valued. Industry is shifting towards automation rapidly.
+
+Today, every start up, product based and service based companies need Automation QA Engineer to automate their web apps.
+
+With more and more applications becoming accessible through browser it becomes very important to learn Selenium WebDriver.
+
+This course is designed to teach in depth concepts of Selenium WebDriver 3 and Java. We focus on the basics first and then move towards the advance concepts of Selenium, Java and framework development.
+
+Part -1: Basics of Java & Selenium
+
+1) Automation : A brief introduction to automation and the need for automation. How automation will enable you to beat competition and make you get the better jobs in market.
+• What is Automation Testing
+• Use of automation Testing
+• Tools for Automation Testing
+• Why automation is important for you career?
+• What is Selenium
+• Advantage of Selenium
+• Introduction to WebDriver
+
+2) Core Java/Programming : This class will set you up for understanding Basic OOPs and java concepts. These concepts will be extremely important for you to become a good Automation tester. This section is specially designed so that can be followed by any Manual test very easily.
+• Data Types and Variables
+• String Class
+• Arithmetic Operators & Concatenation operators
+• Conditional & Decision Making
+• Single Dimensional Array
+• Loops (For, While)
+• Classes and Objects
+• Class Constructors
+• Functions in Java 
+• Function Input Parameters 
+• Function Return Types
+
+Inheritance
+Polymorphism
+Encapsulation
+Data Hiding
+Method Overloading
+Method Overriding
+Abstract class
+Interface
+Exception Handling
+Super/This Keywords
+Final/Finally/Finalize Keywords
+Wrapper Classes
+String Manipulation
+Collections Basics (Array List, HashMap, Set)
+Interview Questions
+3) Eclipse IDE : This topic might seem little off place here but it’s very important topic to understand the tool you are using. Eclipse will the primary choice of development environment and we will discuss features of eclipse here.
+• How to use Eclipse
+• How to run, stop, pause
+• How to debug in Eclipse
+• Understanding console output
+• How to put a break point
+• How to add Watch variables
+• How to find errors from Problem window
+• Usage of step into and Step over debug functionality
+
+Interview Questions
+4) Set up Eclipse : We will start with setting up WebDriver, so that every participant start flaunting off their newly learnt skills by writing some cool test programs:
+• Download and install java
+• Download and start Eclipse
+• Download and configure WebDriver java client
+• Set up a project
+• Create packages
+• Create a First Java test case
+• Import WebDriver Source file
+
+Interview Questions
+5) WebDriver Interface : This topic will make you familiar with the concept of browsers in WebDriver and how to launch basic Firefox browser using WebDriver. Here we will also talk about WebDriver & WebElement interface which will enable us to answer many complicated Interview Questions about WebDriver Implementation.
+• Architecture of WebDriver
+• WebDriver Interface
+• WebElement Interface
+• Launching Firefox/Chrome/Safari
+
+Interview Questions
+6) Browser & Navigation Commands : This is something which everybody do very first thing when they learn Selenium. Opening & closing of browser and some navigation function on top of it.
+• How to Open a URL
+• Verify Page title
+• Strategy to get the Page Source 
+• Difference between Close & Quit
+• Ways to Navigate Back & Forward
+• How to Refresh Page
+• Another way of Navigating to specific Page
+
+Interview Questions
+7) WebElement Commands : An important and basic need of Selenium Automation. This part enables every participant to start writing automation test in their organizations. These are the most commonly used operations on any website.
+• Difference between FindElement & FindElements
+• Enter & Clear text from Input field
+• How Click action works differently on different elements
+• Managing Input fields, Buttons & Links
+• Finding all links on the Page
+• Extracting More than one object from a page 
+• Extracting Objects from a specific area of a web page 
+• Check if element is Present, Displayed, Enabled or Selected
+
+Interview Questions
+8) Locators : In this class we will start learning about HTML, how elements are defined inside HTML document and what are the different attributes that are associated with an HTML element. We also try to find elements based on its attribute values.
+• What are locators
+• HTML Basics
+• HTML language tags and attributes 
+• ID, Name, Xpath, CSS etc
+• Difference between Absolute & Complete Xpath
+• Finding your first element
+• WebElement Commands
+
+Interview Questions
+9) Element Identification : This part explains the lifesaver Add-Ons & tools for Selenium. Finding elements are the most common activity carried out in Selenium. These tools give us power to easily identify complex elements and help us in saving lot of time.
+• Element Inspector in Mozilla, Chrome and IE
+• Element locator tool for FF
+• Various HTML locator strategies
+• XPath Helper Plug-in for Chrome
+• Selection of Effective XPath
+• Handling Dynamic objects/ids on the page
+
+Interview Questions
+10) Tables, Checkboxes & Radio buttons : Many applications involve use of web tables and list boxes. These skills will help participant to get the expertise on complex tables structures and write effective automation test.
+• Identify table rows and columns
+• Extracting values from a cell
+• Dynamically Identify Tables Data
+• Select class in Selenium
+• Drop Down Handle
+• Select multiple values from the list
+• Select & Deselect operations by Index, Value & Visible Text
+
+Interview Questions
+11) Selenium Waits, Alert & Switch Windows : A little complexity will start now onwards. To use Waits effective is very important for every automation tester. Wait helps us in switching windows, handling pop-ups, operating alerts correctly.
+• Implicit and Explicit waits
+• How to use Expected Conditions with Waits
+• PageLoadTimeout & SetScriptTimeout property
+• Simple use of Thread Sleep
+• Concept of Fluent Wait in Selenium 
+• Strategy to poll for an object
+• WebDriverWait and its uses 
+• Different WaitUntil Conditions 
+• Managing Ajax based components 
+• Ways to handle Simple, Confirmation & Prompt Alert
+• Concepts of Set Interface in Java 
+• Difference between Window Handle & Handles 
+• Switching & Closing Windows, Tabs & PopUps
+• Concept of window ID 
+• Extracting window IDs with Selenium Object reference
+
+Interview Questions
+12) Action Class
+This gives us power on recently build Application with latest and complex object features. Hovering mouse or simulate Mouse and Keyword operations can be done by using Action Class. A necessary thing to learn in Selenium journey.
+• What is Action Class & What can we do with Action Class
+• Mouse Hover & Mouse Movement with Action
+• Finding Coordinates of a Web Object
+• Drag and Drop Action
+
+Interview Questions
+13) Browser Profile: Different types of browser profiles and user authentication models with examples will be discussed in this class. You will need these to test secured websites and user authenticated websites.
+• What is Browser Profile
+• How to set up ChromeOptions and Firefox Options
+
+Part -2: Advanced Selenium
+
+14) TestNG Framework
+TestNG is a wonderful off the shelf framework that can be used directly to create your test framework. We will learn about this framework here.
+• What is TestNG
+• Benefits and Features of TestNG
+• How to download TestNG
+• Annotations in TestNg
+• How to run Test Suite in TestNG
+• Groups in TestNG
+• Depend On in TestNG
+• Test Case sequencing in TestNG
+• TestNG Reporters
+• TestNG Assets
+• TestNG Parameters
+• Multi Browser testing in TestNG
+• Parallel testing in TestNG
+
+Interview Questions
+15) Automation Framework
+This class will cover the concepts of Frameworks. After this the participant would got to know that which type of Framework works best for their Application and the pros & cons of the selected framework. Knowledge of frameworks is key skill to learn.
+• What is Automation Framework
+• Features of Automation Framework
+• Benefits of using Automation Framework
+• Different types of Automation Framework
+• What is Data Driven Framework
+
+• What is Hybrid Framework
+
+What is Page Object Model Design Pattern with Non Page Factory with OOP concepts
+Interview Questions 
+16) Real Time Live PROJECT – Selenium Hybrid Framework (POM)
+In this class we will explore some major frameworks by looking at the code and understanding the key component of the framework. 
+
+A real time web application will be taken and framework will be built on top of that which will simulate actual project scenarios.
+
+• Introduction and Component of Frameworks
+• Designing Test Data Provider (Excel)
+• Designing Run Data Provider (Text/Property file) 
+• Setting up Maven Build Tool
+• Data Provider Factory Design
+• Creating Page Objects & Object repository
+• Writing Test Script and Fetching Test Data
+• Designing Test Runner for Framework
+• Asserts, Test Fails & Error logging
+• Reporters, TestNG Listeners and Log file Generation
+• Running test with different Test Data
+• Generating the HTML reports : Extent Report, Allure Report, Emailable Report and PDF Report
+
+Interview Questions
+
+
+17) How to create project JARs (Generic Jars used by different teams)
+
+Normal library JAR
+Runnable JAR
+Run JAR with Command Line Arguments
+How to add generic JAR as a build path in your Java Project
+How to add generic JAR as maven dependency in POM.xml in your Maven Project
+How to create libraries with FAT Jars
+18) Dev Ops & Continuous Integration
+
+Jenkins Setup Basics
+Running Script via Jenkins
+Report Generation using Extent Report
+GIT Repo/GIT HUB
+GIT PULL Request Process
+CheckIn-CheckOut Process
+Push and Pull Commands
+Learn how to use commit command
+What is cloning in GIT
+My First Code Check-in to GIT
+19). Docker
+
+What is Docker
+What is Docker Container
+How to create account on Docker Hub
+Selenium Grid Configuration on Docker Hub
+Run your test cases on Dockerized Selenium Grid Hub – Node
+19) Life Time Access on all recorded Videos, Free Code Repos, and Java Code
+20) Free Cucumber Videos only
+
+ 

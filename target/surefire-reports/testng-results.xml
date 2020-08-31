@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Suite" duration-ms="224792" started-at="2020-08-11T04:00:03Z" finished-at="2020-08-11T04:03:48Z">
+    <groups>
+    </groups>
+    <test name="Test" duration-ms="224792" started-at="2020-08-11T04:00:03Z" finished-at="2020-08-11T04:03:48Z">
+      <class name="com.test.AutoComplete">
+        <test-method status="PASS" signature="handlePopUp()[pri:0, instance:com.test.AutoComplete@91161c7]" name="handlePopUp" duration-ms="224774" started-at="2020-08-11T09:30:03Z" finished-at="2020-08-11T09:33:48Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- handlePopUp -->
+      </class> <!-- com.test.AutoComplete -->
+    </test> <!-- Test -->
+  </suite> <!-- Suite -->
+</testng-results>

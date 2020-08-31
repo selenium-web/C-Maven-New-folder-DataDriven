@@ -1,0 +1,82 @@
+http://exploreselenium.com/testng/run-testng-tests/
+
+http://dl.bintray.com/testng-team/testng-eclipse-release/
+
+unit testing framework
+html report 
+priority
+sequense
+skip 
+
+pre condition annotations
+test annotation 
+post condition annotations
+
+
+using priority, groups, enabled, dependsOnMethod,invocationCount,
+invocationCount, expectedException keywords ---- imp 
+
+
+TDD --- Test driven developement framework 
+TestNG help us to design out test cases in a systematic way. 
+we can drive our test cases using testNG. 
+
+http://dl.bintray.com/testng-team/testng-eclipse-release/
+
+testNG helps us to write test cases with the help of annotation. 
+pre condition , post condition annotation and test annotations provided by testNG. 
+
+
+TestNG Annotations
+@Test :  To mark a method as a test method
+@BeforeMethod: Executes before each test (@Test) method. this must be in same class where test case is written, else it will not run 
+@AfterMethod: Executes after each test (@Test) method. this must be in same class where test case is written, else it will not run 
+@BeforeClass: Executes before the first test method in the current class. this must be in same class where test case is written, else it will not run
+@AfterClass: Executes after all the test methods in a current class. this must be in same class where test case is written, else it will not run
+
+@BeforeTest: Executes before any test methods of available classes which are inside the <test> tag in the testng.xml in this suite.
+this can be in same or different class where test case is written, it will run
+@AfterTest: Executes after all the test methods of available classes which are inside the <test> tag in the testng.xml in this suite.
+this can be in same or different class where test case is written, it will run
+@BeforeSuite: Executes before all the tests in this suite.
+this can be in same or different class where test case is written, it will run
+@AfterSuite: Executes after all tests executed in this current suite.
+this can be in same or different class where test case is written, it will run
+
+@BeforeGroup: Executes before the first test method run in that specified group
+@AfterGroup: Executes after the end of all the test methods executed in that specified group
+TestNG have more annotations like @BeforeGroup, @AfterGroup, @Listeners, @Parameters, @DataProvider, @Factory.  These will be covered in next posts.
+
+Sequence of Execution of the annotations:
+BeforeSuite
+BeforeTest
+BeforeClass
+BeforeMethod
+Test
+AfterMethod
+AfterClass
+AfterTest
+AfterSuite
+Here is the code to show the sequence of execution.
+
+Class ‘SampleTestngUsage’ contains annotations @BeforeTest, @BeforeSuite, @AfterTest & @AfterSuite
+Class ‘AnnotationsTest’ contains annotations @Test, @BeforeMethod, @AfterMethod, @beforeClass, @AfterClass, 
+
+
+test result :
+From BeforeSuite annotation in SampleTestngUsage class ..
+From BeforeTest annotation in SampleTestngUsage class ..
+From BeforeClass annotation test in AnnotationsTest class....
+From BeforeMethod annotation in AnnotationsTest....
+From first test annotated in AnnotationsTest....
+From AfterMethod annotation in AnnotationsTest....
+From BeforeMethod annotation in AnnotationsTest....
+From first test annotated in AnnotationsTest....
+From AfterMethod annotation in AnnotationsTest....
+From AfterClass annotation test in AnnotationsTest class....
+From AfterTest annotation in AnnotationsTest class ....
+From AfterSuite annotation in AnnotationsTest class ....
+
+assertions 
+
+
